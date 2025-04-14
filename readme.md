@@ -1,4 +1,4 @@
-# Kuhn's Algorithm Visualization
+# Kuhn's Algorithm Visualization | Ford Falkerson
 
 This repository contains a **Flask** application that demonstrates an **interactive visualization** of **Kuhn's algorithm** for finding a maximum matching in a bipartite graph.
 
@@ -27,7 +27,7 @@ kuhn_app/
 
 Основная идея: алгоритм **последовательно** пытается найти для каждой вершины левой доли подходящую «парную» вершину в правой доле. Если вершина в правой доле уже занята, алгоритм пытается «сместить» занятую вершину через поиск *увеличивающего пути* (т. е. путь, чередующий рёбра внутри и вне текущего паросочетания).
 
-## 3 Алгоритм
+## 3. Алгоритм
 
 Пусть дан двудольный граф \( G = (X, Y, E) \) с \( |X|=n_1 \), \( |Y|=n_2 \).  
 Пусть `adj[v]` — список вершин правой доли, смежных левой вершине \( v \).
@@ -44,7 +44,7 @@ for u in adj[v]:
 
 return False
 ```  
-## Запуск
+## 4. Запуск
 Для запуска приложения необходимо:
 ```
 git clone
@@ -52,6 +52,19 @@ cd mflow_kina
 pip install -r requrements.txt
 python app.py
 ```
+
+## 5. Ford Falkerson
+// T0D0 implement description and algorythm
+
+![step0](./materials/img/step0.jpg) 
+
+![step1](./materials/img/step1.jpg) 
+
+![step2](./materials/img/step1.jpg) 
+
+![step3](./materials/img/step3.jpg) 
+
+// T0D3 implement Ford Falkerson into flask app
 
 ## license
 

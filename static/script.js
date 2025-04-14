@@ -18,6 +18,8 @@ window.addEventListener('load', () => {
     });
 });
 
+//t0d1: create option for choosing graph out of visuals
+
 function loadGraphData() {
     fetch('/get_graph_data')
         .then(resp => resp.json())
