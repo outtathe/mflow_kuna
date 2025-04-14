@@ -2,14 +2,13 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 
 app = Flask(__name__)
 
-# ----- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ ДЕМОНСТРАЦИИ ------
 graph_data = {
     "n_left": 0,
     "n_right": 0,
     "edges": [],
-    "matchR": []  # Добавим сюда результат паросочетания
+    "matchR": []
 }
-steps = []            # логи (шаги) работы алгоритма Куна
+steps = []
 
 
 # ----- АЛГОРИТМ КУНА С ЛОГИРОВАНИЕМ ------
@@ -69,15 +68,12 @@ def kuhn_with_steps(n_left, n_right, edges):
 
         return False
 
-    # Запускаем DFS для каждой левой вершины
     for v in range(n_left):
         used = [False] * n_left
         dfs(v, used)
 
     return matchR, result_steps
 
-
-# ----- РОУТЫ ПРИЛОЖЕНИЯ ------
 @app.route("/")
 def index():
     """
@@ -99,8 +95,6 @@ def set_graph():
     n_left = int(request.form.get("n_left", 0))
     n_right = int(request.form.get("n_right", 0))
     edges_str = request.form.get("edges", "")
-
-    # Разбираем строку edges_str: формат "0-0, 0-1, 1-1, ..."
     edges_list = []
     for part in edges_str.split(","):
         part = part.strip()
@@ -112,25 +106,16 @@ def set_graph():
             u = int(right_s.strip())
             edges_list.append((v, u))
 
-    # Сохраняем в глобальное хранилище
-    # graph_data = {
-    #     "n_left": n_left,
-    #     "n_right": n_right,
-    #     "edges": edges_list
-    # }
-
-    # Запускаем алгоритм Куна
     matchR, local_steps = kuhn_with_steps(n_left, n_right, edges_list)
-    steps = local_steps  # сохраним логи шагов
+    steps = local_steps 
 
     graph_data = {
         "n_left": n_left,
         "n_right": n_right,
         "edges": edges_list,
-        "matchR": matchR  # сохраняем результат
+        "matchR": matchR 
     }
 
-    # Переходим на страницу с визуализацией
     return redirect(url_for("visualize"))
 
 
