@@ -7,7 +7,15 @@
 </head>
 <body>
   <h1>алгоритм куна — настройка графа</h1>
-  
+  {% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <div class="flash-messages">
+      {% for message in messages %}
+        <p>{{ message }}</p>
+      {% endfor %}
+    </div>
+    {% endif %}
+  {% endwith %}
   <!-- Блок-обёртка для формы, чтобы можно было выровнять контент и стилизовать -->
   <div class="form-container">
     <form action="{{ url_for('set_graph') }}" method="post">

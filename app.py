@@ -1,7 +1,8 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, redirect, url_for, jsonify, flash
 
 app = Flask(__name__)
 
+app.secret_key = '8'
 graph_data = {
     "n_left": 0,
     "n_right": 0,
@@ -9,6 +10,18 @@ graph_data = {
     "matchR": []
 }
 steps = []
+
+def is_bipartite(n_left, n_right, edges):
+    """
+    Проверяет, что каждое ребро (v, u) удовлетворяет:
+      - 0 <= v < n_left
+      - 0 <= u < n_right
+    Если хотя бы одно ребро не удовлетворяет, считаем, что граф недвудольный.
+    """
+    for (v, u) in edges:
+        if v < 0 or v >= n_left or u < 0 or u >= n_right:
+            return False
+    return True
 
 
 # ----- АЛГОРИТМ КУНА С ЛОГИРОВАНИЕМ ------
@@ -105,6 +118,10 @@ def set_graph():
             v = int(left_s.strip())
             u = int(right_s.strip())
             edges_list.append((v, u))
+
+    if not is_bipartite(n_left, n_right, edges_list):
+        flash("введённый граф недвудолен. пожалуйста, введите корректный двудольный граф.")
+        return redirect(url_for("index"))
 
     matchR, local_steps = kuhn_with_steps(n_left, n_right, edges_list)
     steps = local_steps 
