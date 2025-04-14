@@ -3,46 +3,50 @@ from collections import deque
 def max_flow(capacity, source, sink):
     n = len(capacity)
     max_flow_value = 0
-    # Инициализируем остаточную способность как копию исходной capacity
+    # Копируем исходную матрицу пропускных способностей для создания остаточной сети
     residual = [capacity[i][:] for i in range(n)]
-
+    
     while True:
-        parent = [-1] * n 
-        parent[source] = source 
-        # BFS queue
-        queue = deque([source])
+        parent = [-1] * n  # Массив для восстановления пути: parent[v] = предок вершины v
+        parent[source] = source  # Источник отмечаем как посещённый (его предок — сам он)
+        queue = [source]  # Очередь с начальным элементом — источником
         path_found = False
-        # Поиск в ширину по резидуальной сети
+        
+        # Реализация поиска в ширину (BFS) с использованием списка как очереди
         while queue and not path_found:
-            u = queue.popleft()
+            u = queue.pop(0)  # извлекаем первый элемент очереди
             for v in range(n):
+                # если по ребру u->v есть остаточная пропускная способность и v ещё не посещена
                 if residual[u][v] > 0 and parent[v] == -1:
-                    parent[v] = u
-                    if v == sink:   
+                    parent[v] = u   # запоминаем, что мы пришли в v из u
+                    if v == sink:   # если достигли стока, то увеличивающий путь найден
                         path_found = True
-                        break     
-                    queue.append(v)
-        if not path_found:
-            break 
+                        break
+                    queue.append(v)   # добавляем вершину в очередь для дальнейшего обхода
 
-        # Найдем бутылочное горлышко - минимальную остаточную пропускную способность на пути
+        # Если путь не найден, алгоритм завершает работу
+        if not path_found:
+            break
+
+        # Определяем бутылочное горлышко — минимальную остаточную пропускную способность вдоль найденного пути
         v = sink
         bottleneck = float('inf')
         while v != source:
             u = parent[v]
             bottleneck = min(bottleneck, residual[u][v])
             v = u
-
-        # Пройдем по пути ещё раз и обновим остаточные пропускные способности ребер
+        
+        # Обновляем остаточную сеть по найденному пути:
+        # уменьшаем остаточную пропускную способность на прямых рёбрах и увеличиваем на обратных
         v = sink
         while v != source:
             u = parent[v]
-            residual[u][v] -= bottleneck      # уменьшим доступ вперед
-            residual[v][u] += bottleneck      # увеличим доступ назад
+            residual[u][v] -= bottleneck
+            residual[v][u] += bottleneck
             v = u
-
+        
         max_flow_value += bottleneck
-
+    
     return max_flow_value
 
 # Матрица емкостей графа из примера (S=0, A=1, B=2, C=3, D=4, T=5)
