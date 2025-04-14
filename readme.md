@@ -60,9 +60,9 @@ python app.py
 
 ![step1](./materials/img/step1.jpg) 
 
-![step2](./materials/img/step1.jpg) 
+![step2](./materials/img/step3.jpg) 
 
-![step3](./materials/img/step3.jpg) 
+![step3](./materials/img/step4.jpg) 
 
 // T0D3 implement Ford Falkerson into flask app
 
