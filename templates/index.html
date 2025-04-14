@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Алгоритм Куна — настройка графа</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Задайте параметры двудольного графа</h1>
+    <form action="{{ url_for('set_graph') }}" method="post">
+        <div>
+            <label>Число вершин в левой доле (n_left):</label>
+            <input type="number" name="n_left" value="3">
+        </div>
+        <div>
+            <label>Число вершин в правой доле (n_right):</label>
+            <input type="number" name="n_right" value="3">
+        </div>
+        <div>
+            <label>Список рёбер (формат v-u, через запятую):</label><br>
+            <textarea name="edges" rows="4" cols="50">0-0, 0-1, 1-1, 1-2, 2-0, 2-2</textarea>
+        </div>
+        <button type="submit">Построить и запустить алгоритм</button>
+    </form>
+</body>
+</html>

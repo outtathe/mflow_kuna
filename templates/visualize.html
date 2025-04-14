@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Визуализация алгоритма Куна</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+<h1>Пошаговая визуализация</h1>
+
+<div id="graph-container">
+    <!-- Сюда можем вставлять canvas или svg для рисования графа -->
+    <!-- Или просто текстово выводить состояние -->
+</div>
+
+<div>
+    <button id="btnNext">Следующий шаг</button>
+</div>
+
+<div id="log"></div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>

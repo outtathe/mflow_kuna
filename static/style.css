@@ -1,0 +1,20 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+#graph-container {
+    border: 1px solid #ccc;
+    padding: 10px;
+    width: 600px;
+    height: 300px;
+    margin-bottom: 10px;
+}
+
+#log {
+    background-color: #eee;
+    padding: 10px;
+    margin-top: 10px;
+    max-height: 200px;
+    overflow: auto;
+}
