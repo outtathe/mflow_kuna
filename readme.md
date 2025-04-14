@@ -5,6 +5,7 @@ This repository contains a **Flask** application that demonstrates an **interact
 ---
 
 ## 1. Структура репозитория
+```
 kuhn_app/ 
 ├── app.py 
 ├── requirements.txt 
@@ -15,6 +16,7 @@ kuhn_app/
 | ├── index.html 
 | └── visualize.html 
 └── README.md
+```
 
 ## 2. Описание алгоритма (теория)
 
