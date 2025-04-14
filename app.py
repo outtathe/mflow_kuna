@@ -2,66 +2,52 @@ from flask import Flask, render_template, request, redirect, url_for, jsonify
 
 app = Flask(__name__)
 
-# ----- Блок хранения "сессии" или данных о графе ------
-# В реальном приложении можно хранить это в БД или Session; тут - в глобальных переменных для простоты.
-
+# ----- ГЛОБАЛЬНЫЕ ПЕРЕМЕННЫЕ ДЛЯ ДЕМОНСТРАЦИИ ------
 graph_data = {
     "n_left": 0,
     "n_right": 0,
-    "edges": []     # список кортежей (v_left, v_right)
+    "edges": [],
+    "matchR": []  # Добавим сюда результат паросочетания
 }
-
-# Список шагов алгоритма (для визуализации).
-# Каждый элемент steps будет содержать инфу о вершинах/рёбрах, подсветках и т.д.
-steps = []
+steps = []            # логи (шаги) работы алгоритма Куна
 
 
-# ----- Алгоритм Куна с логированием шагов ------
+# ----- АЛГОРИТМ КУНА С ЛОГИРОВАНИЕМ ------
 def kuhn_with_steps(n_left, n_right, edges):
     """
-    n_left  : кол-во вершин левой доли (номеруются 0..n_left-1)
-    n_right : кол-во вершин правой доли (0..n_right-1)
-    edges   : список (v, u), где v - индекс левой, u - индекс правой
-
-    Возвращает:
-      matchR : массив размера n_right (matchR[u] = v, если правая u занята левой v, иначе -1)
-      steps  : список "снимков" процесса работы
+    Выполняет алгоритм Куна, возвращая:
+      - matchR: массив размера n_right (matchR[u] = v, если вершина u сопоставлена с v, иначе -1)
+      - steps_list: список "шагов", для визуализации.
     """
-
-    # Сформируем список смежности для левых вершин
+    # Построим список смежности для левых вершин
     adj = [[] for _ in range(n_left)]
     for (v, u) in edges:
         adj[v].append(u)
 
-    matchR = [-1] * n_right  # какая левая вершина связана с правой u
-    result_steps = []
+    matchR = [-1] * n_right
+    result_steps = []  # сюда пишем логи шагов
 
     def dfs(v, used):
-        """
-        Модифицированный DFS для поиска увеличивающего пути.
-        Логируем каждый раз, когда обращаемся к вершине/ребру.
-        """
         if used[v]:
             return False
         used[v] = True
 
-        # Для лога: запомним, что мы пришли в вершину v (из левой доли)
+        # Логируем: "посетили левую вершину v"
         result_steps.append({
             "type": "visit_left_vertex",
             "vertex_left": v
         })
 
         for u in adj[v]:
-            # Логируем попытку обработать ребро (v -> u)
+            # Логируем: "рассматриваем ребро (v -> u)"
             result_steps.append({
                 "type": "explore_edge",
                 "edge_left": v,
                 "edge_right": u
             })
 
-            # Если правая вершина u свободна или можно освободить
             if matchR[u] == -1:
-                # Логируем факт, что "свободная правая вершина u нашлась"
+                # Нашли свободную вершину справа
                 result_steps.append({
                     "type": "found_free_right",
                     "vertex_right": u
@@ -69,21 +55,21 @@ def kuhn_with_steps(n_left, n_right, edges):
                 matchR[u] = v
                 return True
             else:
-                # Попробуем "сместить" вершину matchR[u]
+                # Правая вершина u уже занята левой v2
                 v2 = matchR[u]
                 result_steps.append({
                     "type": "right_taken",
                     "vertex_right": u,
                     "occupied_by": v2
                 })
+                # Пытаемся освободить u, "сместив" v2
                 if dfs(v2, used):
-                    # Переподключаем
                     matchR[u] = v
                     return True
 
         return False
 
-    # Основной цикл по всем левым вершинам
+    # Запускаем DFS для каждой левой вершины
     for v in range(n_left):
         used = [False] * n_left
         dfs(v, used)
@@ -91,11 +77,11 @@ def kuhn_with_steps(n_left, n_right, edges):
     return matchR, result_steps
 
 
-# ----- Роуты ------
+# ----- РОУТЫ ПРИЛОЖЕНИЯ ------
 @app.route("/")
 def index():
     """
-    Стартовая страница: форма для ввода количества вершин и списка рёбер
+    Стартовая страница с формой ввода данных о графе.
     """
     return render_template("index.html")
 
@@ -103,14 +89,18 @@ def index():
 @app.route("/set_graph", methods=["POST"])
 def set_graph():
     """
-    Обрабатывает форму с параметрами графа: n_left, n_right, edges
+    Принимает POST-данные с формы: n_left, n_right, edges
+    Парсит строки, сохраняет в глобальной переменной,
+    запускает алгоритм Куна и логирует шаги.
+    Затем редиректит на /visualize.
     """
     global graph_data, steps
 
     n_left = int(request.form.get("n_left", 0))
     n_right = int(request.form.get("n_right", 0))
     edges_str = request.form.get("edges", "")
-    
+
+    # Разбираем строку edges_str: формат "0-0, 0-1, 1-1, ..."
     edges_list = []
     for part in edges_str.split(","):
         part = part.strip()
@@ -122,31 +112,55 @@ def set_graph():
             u = int(right_s.strip())
             edges_list.append((v, u))
 
+    # Сохраняем в глобальное хранилище
+    # graph_data = {
+    #     "n_left": n_left,
+    #     "n_right": n_right,
+    #     "edges": edges_list
+    # }
+
+    # Запускаем алгоритм Куна
+    matchR, local_steps = kuhn_with_steps(n_left, n_right, edges_list)
+    steps = local_steps  # сохраним логи шагов
+
     graph_data = {
         "n_left": n_left,
         "n_right": n_right,
-        "edges": edges_list
+        "edges": edges_list,
+        "matchR": matchR  # сохраняем результат
     }
 
-    matchR, steps_local = kuhn_with_steps(n_left, n_right, edges_list)
-    steps = steps_local 
-
+    # Переходим на страницу с визуализацией
     return redirect(url_for("visualize"))
 
 
 @app.route("/visualize")
 def visualize():
     """
-    Отображение страницы с визуализацией пошагового алгоритма
+    Просто отдаёт HTML-шаблон visualize.html,
+    где находится наша SVG-анимация.
     """
     return render_template("visualize.html")
 
 
-@app.route("/get_steps")
-def get_steps():
+@app.route("/get_graph_data")
+def get_graph_data():
     """
-    Возвращает весь список шагов в формате JSON,
-    который фронтенд будет отображать последовательно.
+    Возвращает JSON с информацией о графе:
+    {
+       "n_left": ...,
+       "n_right": ...,
+       "edges": [ (v, u), (v, u), ...]
+    }
+    """
+    return jsonify(graph_data)
+
+
+@app.route("/get_steps")
+def get_steps_data():
+    """
+    Возвращает JSON со списком шагов:
+    steps = [ {...}, {...}, ... ]
     """
     return jsonify(steps)
 

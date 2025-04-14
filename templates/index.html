@@ -1,26 +1,33 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8">
-    <title>Алгоритм Куна — настройка графа</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <meta charset="UTF-8">
+  <title>алгоритм куна — настройка графа</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
 </head>
 <body>
-    <h1>Задайте параметры двудольного графа</h1>
+  <h1>алгоритм куна — настройка графа</h1>
+  
+  <!-- Блок-обёртка для формы, чтобы можно было выровнять контент и стилизовать -->
+  <div class="form-container">
     <form action="{{ url_for('set_graph') }}" method="post">
-        <div>
-            <label>Число вершин в левой доле (n_left):</label>
-            <input type="number" name="n_left" value="3">
-        </div>
-        <div>
-            <label>Число вершин в правой доле (n_right):</label>
-            <input type="number" name="n_right" value="3">
-        </div>
-        <div>
-            <label>Список рёбер (формат v-u, через запятую):</label><br>
-            <textarea name="edges" rows="4" cols="50">0-0, 0-1, 1-1, 1-2, 2-0, 2-2</textarea>
-        </div>
-        <button type="submit">Построить и запустить алгоритм</button>
+      <div class="form-group">
+        <label>число вершин в левой доле (n_left):</label>
+        <input type="number" name="n_left" value="3">
+      </div>
+      <div class="form-group">
+        <label>число вершин в правой доле (n_right):</label>
+        <input type="number" name="n_right" value="3">
+      </div>
+      <div class="form-group">
+        <label>список рёбер (формат v-u, через запятую):</label><br>
+        <textarea name="edges" rows="4" cols="50">0-0, 0-1, 1-1, 1-2, 2-0, 2-2</textarea>
+      </div>
+      
+      <div class="button-container">
+        <button type="submit">построить и запустить алгоритм</button>
+      </div>
     </form>
+  </div>
 </body>
 </html>

@@ -1,20 +1,117 @@
+/* базовые стили для всего сайта */
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
+    text-align: center;
+    font-family: "Courier New", monospace;
+    margin: 0;
+    padding: 20px;
+    background-color: #ffffff;
+    color: #333333;
+    box-sizing: border-box;
 }
 
-#graph-container {
+h1 {
+    text-transform: lowercase;
+    font-weight: normal;
+    margin-bottom: 20px;
+}
+
+p {
+    text-transform: lowercase;
+}
+
+/* контейнер с формой на index.html */
+.form-container {
+    display: inline-block; /* чтобы контейнер занимал ширину по контенту */
+    text-align: left;      /* выравнивать элементы формы слева внутри контейнера */
+    background-color: #f9f9f9;
+    padding: 20px;
     border: 1px solid #ccc;
-    padding: 10px;
-    width: 600px;
-    height: 300px;
-    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+.form-container .form-group {
+    margin-bottom: 15px;
+}
+
+.form-container label {
+    display: block;
+    margin-bottom: 5px;
+    text-transform: lowercase;
+}
+
+/* поля ввода */
+.form-container input,
+.form-container textarea {
+    width: 100%;
+    padding: 8px;
+    font-family: "Courier New", monospace;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+/* кнопки */
+.button-container {
+    text-align: center;
+    margin-top: 10px;
+}
+
+button {
+    background-color: #f0f0f0;
+    color: #333;
+    font-size: 16px;
+    padding: 10px 20px;
+    border: 2px solid #ccc;
+    cursor: pointer;
+    text-transform: lowercase;
+    border-radius: 6px;
+    font-family: "Courier New", monospace;
+}
+
+button:hover {
+    background-color: #e0e0e0;
+}
+
+/* стили для visualize.html */
+svg {
+    display: block;
+    margin: 20px auto;
+    max-width: 90%;
+    border: 1px solid #dddddd;
 }
 
 #log {
-    background-color: #eee;
+    margin: 20px auto 10px auto;
+    max-width: 600px;
+    text-align: left;
+    font-size: 14px;
+    background: #f9f9f9;
     padding: 10px;
-    margin-top: 10px;
-    max-height: 200px;
-    overflow: auto;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    min-height: 60px;
+}
+
+#final-result {
+    margin: 0 auto;
+    max-width: 600px;
+    color: #88304e; 
+    font-size: 16px;
+    margin-top: 15px;
+    text-transform: lowercase;
+    line-height: 1.4;
+}
+
+#final-result p {
+    margin: 10px 0;
+    font-weight: bold;
+    color: #522546;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px; 
+    margin-bottom: 10px;
 }
