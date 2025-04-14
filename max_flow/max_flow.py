@@ -1,5 +1,3 @@
-from collections import deque
-
 def max_flow(capacity, source, sink):
     n = len(capacity)
     max_flow_value = 0
